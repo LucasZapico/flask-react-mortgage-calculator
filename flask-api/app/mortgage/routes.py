@@ -1,35 +1,29 @@
-from flask import Flask, Blueprint, jsonify, make_response
-from flask.globals import session
+from flask import  Blueprint, json, jsonify, request
+
 from flask_cors import CORS, cross_origin
-from app.helper import login_required
 
-from .models import User
+from .models import Calculation
 
-auth = Blueprint('auth', __name__, url_prefix='/api/v1')
 
-@auth.route('/user/signup', methods=["POST"])
+mortgage = Blueprint('mortgage', __name__, url_prefix='/api/v1')
+
+# basic public route
+@mortgage.route('/')
 @cross_origin()
-def signup():
-  user = User()
-  data = user.signup() 
-  # add session to response
-  # data['flask session'] = session['logged_in']
-  resp = make_response(data)
-  # resp.headers.add('Access-Control-Allow-Origin', '*')
+def index():
+  return jsonify({'message': 'hello from mortgage'})
 
-  return resp
 
-# login route
-@auth.route('/user/login', methods=["POST"])
+@mortgage.route('/public', methods=['GET'])
 @cross_origin()
-def login():
-  user = User()
-  return user.login()
- 
-# logout route
-@auth.route('/user/logout', methods=["POST"])
-@login_required
+def public_example():
+  return jsonify({'message': 'hello from simple public route'})
+
+
+@mortgage.route('/mortgagecalc', methods=['POST'])
 @cross_origin()
-def logout():
-  user = User()
-  return user.logout()
+def mortgage_calc():
+  mortgage_data =  request.get_json()
+  calculator = Calculation()
+  
+  return calculator.calculate_mortgage_payment(mortgage_data)

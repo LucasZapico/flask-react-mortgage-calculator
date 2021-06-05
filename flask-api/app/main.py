@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, session
+from flask import Blueprint, jsonify
 
 main = Blueprint('main', __name__)
 
@@ -10,6 +10,5 @@ def index():
 
 @main.route('/public', methods=['GET'])
 def public_example():
-  print('sessions', session)
   return jsonify({'message': 'hello from simple public route'})
 

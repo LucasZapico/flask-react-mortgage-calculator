@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { set, useForm } from 'react-hook-form';
+
 import axios from 'axios';
+import { axiosInstance } from '../App/App';
 
 const CalculateMortgage = async (data) => {
+  console.log(process.env.REACT_APP_API_BASE_URL);
+  console.log('data', data);
   return await axios
     .post('api/v1/mortgagecalc', data, {
-      baseURL: process.env.REACT_APP_API_BASE_URL,
+      timeout: 1000,
       headers: {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
@@ -27,72 +31,98 @@ const MortgageCalc = () => {
     watch,
     formState: { errors },
   } = useForm();
-  const onSubmit = async (data) => {
-    console.log('submit-data', data);
-    const response = await CalculateMortgage(data);
-  };
-
   const [mortgageData, setMortgageData] = useState({
     homePrice: 220000,
     downPayment: 80000,
     percentDown: 80000 / 220000,
     interestRate: 3.06,
     lengthOfLoan: 30,
+    monthlyPayment: '0',
   });
 
-  return (
-    <div class="flex one">
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <fieldset class="flex one">
-          <label for="home-price">
-            Home Price
-            {/* <input
-              type="range"
-              id="home-price"
-              name="home-price"
-              defaultValue={mortgageData.homePrice}
-              min="40000"
-              max="3000000"
-            /> */}
-            <input
-              {...register('home-price')}
-              type="home-price"
-              placeholder={mortgageData.homePrice}
-            />
-            <span>{mortgageData.homePrice}</span>
-          </label>
+  const onSubmit = async (data) => {
+    console.log('submit-data', data);
+    const response = await CalculateMortgage(data);
+    setMortgageData((prev) => {
+      return { ...prev, monthlyPayment: response.data?.monthlyPayment };
+    });
+  };
 
-          <label for="down-payment flex">
-            Down Payment
+  return (
+    <div className="row">
+      <div className="col s12 m4">
+        <form onSubmit={handleSubmit(onSubmit)} className="row">
+          <div className="input-field col s12">
+            <label className="active" htmlFor="down-payment">
+              Home Price
+            </label>
+            <p className="range-field">
+              <input
+                type="range"
+                id="test5"
+                min="40000"
+                max="3000000"
+                defaultValue={mortgageData.homePrice}
+                onChange={(e) =>
+                  setMortgageData((prev) => {
+                    return { ...prev, homePrice: e.target.value };
+                  })
+                }
+              />
+            </p>
             <input
-              type="down-payment"
-              placeholder={mortgageData.downPayment}
+              id="home-price"
+              type="text"
+              className="validate"
+              {...register('home-price')}
+              value={`$ ${mortgageData.homePrice}`}
+            ></input>
+          </div>
+          <div className="input-field col s12">
+            <label className="active" htmlFor="down-payment">
+              Down Payment
+            </label>
+            <input
+              id="down-payment"
+              type="text"
+              className="validate"
+              defaultValue={`$${mortgageData.downPayment}`}
               {...register('down-payment')}
             />
-            Percent Down{' '}
-            <span>{`${Math.ceil(mortgageData.percentDown * 100)}%`}</span>
-          </label>
-          <label>
-            Length Of Loan
+          </div>
+          <div className="input-field col s12">
             <input
-              type="length-of-loan"
-              placeholder={`${mortgageData.lengthOfLoan} years`}
+              id="length-of-loan"
+              type="text"
+              className="validate"
+              defaultValue={`${mortgageData.lengthOfLoan} years`}
               {...register('length-of-loan')}
             />
-          </label>
-          <label>
-            Interest Rate
+            <label className="active" htmlFor="length-of-loan">
+              Length Of Loan
+            </label>
+          </div>
+          <div className="input-field col s12">
             <input
-              type="interest-rate"
-              {...register('interst-rate')}
-              placeholder={`${mortgageData.interestRate}%`}
-            />
-          </label>
-        </fieldset>
-        <input type="submit" />
-      </form>
-      <div>
-        <span>2</span>
+              defaultValue={`${mortgageData.interestRate} %`}
+              id="interest-rate"
+              type="text"
+              className="validate"
+              {...register('interest-rate')}
+            ></input>
+            <label className="active" htmlFor="interest-rate">
+              Interest Rate
+            </label>
+          </div>
+          <div className="input-field col s12">
+            <input type="submit" className="btn"></input>
+          </div>
+        </form>
+      </div>
+      <div className="col s12 m8">
+        <div className="row">
+          <h2>{`$${parseInt(mortgageData.monthlyPayment)}`}</h2>
+        </div>
       </div>
     </div>
   );

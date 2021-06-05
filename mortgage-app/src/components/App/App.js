@@ -1,19 +1,22 @@
-import { useState, useEffect } from 'react';
+import { MortgageCalc, Navbar } from '../_index';
 import {
   Redirect,
-  Switch,
-  BrowserRouter as Router,
   Route,
+  BrowserRouter as Router,
+  Switch,
 } from 'react-router-dom';
-import { Navbar, MortgageCalc } from '../_index';
+import { useEffect, useState } from 'react';
+
 import axios from 'axios';
+
+axios.defaults.baseURL = process.env.REACT_APP_API_BASE_URL;
 
 function App() {
   return (
     <Router>
       <Navbar />
       <div className="App">
-        <h1>App</h1>
+        <h1 className="h4">Mortgage Calculator</h1>
         <MortgageCalc />
       </div>
     </Router>
