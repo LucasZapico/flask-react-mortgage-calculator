@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { set, useForm } from 'react-hook-form';
 
 import axios from 'axios';
-import { axiosInstance } from '../App/App';
 
 const CalculateMortgage = async (data) => {
   console.log(process.env.REACT_APP_API_BASE_URL);
