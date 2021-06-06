@@ -57,7 +57,7 @@ const MortgageCalc = () => {
               Home Price
             </label>
             <p className="range-field">
-              <input
+              {/* <input
                 type="range"
                 id="test5"
                 min="40000"
@@ -68,14 +68,14 @@ const MortgageCalc = () => {
                     return { ...prev, homePrice: e.target.value };
                   })
                 }
-              />
+              /> */}
             </p>
             <input
               id="home-price"
               type="text"
               className="validate"
               {...register('home-price')}
-              value={`$ ${mortgageData.homePrice}`}
+              defaultValue={`$ ${mortgageData.homePrice}`}
             ></input>
           </div>
           <div className="input-field col s12">
