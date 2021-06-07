@@ -1,3 +1,4 @@
+import { Col, Row } from 'react-materialize';
 import React, { useState } from 'react';
 import { set, useForm } from 'react-hook-form';
 
@@ -48,8 +49,8 @@ const MortgageCalc = () => {
   };
 
   return (
-    <div className="row">
-      <div className="col s12 m4">
+    <Row>
+      <Col s={12} m={4}>
         <form onSubmit={handleSubmit(onSubmit)} className="row">
           <div className="input-field col s12">
             <label className="active" htmlFor="down-payment">
@@ -117,13 +118,13 @@ const MortgageCalc = () => {
             <input type="submit" className="btn"></input>
           </div>
         </form>
-      </div>
-      <div className="col s12 m8">
+      </Col>
+      <Col s={12} m={4}>
         <div className="row">
           <h2>{`$${parseInt(mortgageData.monthlyPayment)}`}</h2>
         </div>
-      </div>
-    </div>
+      </Col>
+    </Row>
   );
 };
 
